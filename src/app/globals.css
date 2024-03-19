@@ -1,0 +1,29 @@
+@tailwind base;
+/* width */
+::-webkit-scrollbar {
+  width: 2px;
+}
+
+/* Track */
+body.dark::-webkit-scrollbar-track {
+  background: #000000;
+}
+body::-webkit-scrollbar-track {
+  background: #ffffff;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #000000;
+}
+
+@tailwind components;
+@tailwind utilities;
+body {
+  overflow-x: hidden;
+}
+@layer utilities {
+  .inputField {
+    @apply px-5 py-1 mb-4 border-b-2 border-gray-300 ring-0 focus:ring-0 focus:outline-none;
+  }
+}
