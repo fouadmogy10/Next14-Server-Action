@@ -8,7 +8,9 @@ const Page = async () => {
   //   _id: -1,
   // });
 
-  const res = await fetch(`${process.env.API_URL}/api/products`,{ cache: "no-store" });
+  const res = await fetch(`${process.env.API_URL}/api/products`, {
+    cache: "no-store",
+  });
   const products = await res.json();
 
   return (
@@ -68,13 +70,18 @@ const Page = async () => {
                         key={product._id}
                         className="hover:bg-gray-100 dark:hover:bg-gray-700"
                       >
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <Image
-                            src={product.image}
-                            width={80}
-                            height={80}
-                            alt={product.productName}
-                          />
+                        <td className="px-6 py-4 whitespace-nowrap ">
+                          <div className="w-[80px] h-[80px] relative ">
+                            <Image
+                              src={product.image}
+                               
+                              alt={product.productName}
+                              className="rounded-full"
+                              fill
+                              sizes=" 80px, 160px"
+                              
+                            />
+                          </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
                           {product.productName}
@@ -85,13 +92,13 @@ const Page = async () => {
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
                           {product.category}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium flex justify-center gap-1">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium ">
+                          {product && <EditProduct editProduct={product} />}
+                          <br />
                           <DeleteForm
                             _id={product._id.toString()}
                             productName={product.productName}
                           />
-                          {product && <EditProduct editProduct={product}/>}
-                          
                         </td>
                       </tr>
                     );

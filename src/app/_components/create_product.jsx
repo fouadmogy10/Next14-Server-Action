@@ -2,8 +2,10 @@
 import { createProduct } from "../../lib/Actions";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useEffect, useRef, useState } from "react";
-import { useFormState, useFormStatus } from "react-dom";
+import { useFormState } from "react-dom";
 import toast from "react-hot-toast";
+import DeleteBtn from "./ui/DeleteBtn";
+
 export default function Create() {
   let [isOpen, setIsOpen] = useState(false);
 
@@ -14,10 +16,12 @@ export default function Create() {
   function openModal() {
     setIsOpen(true);
   }
+
   const [state, formAction] = useFormState(createProduct, {
     message: null,
   });
-  const { pending } = useFormStatus();
+
+
   const ref = useRef(null);
 
   useEffect(() => {
@@ -36,7 +40,7 @@ export default function Create() {
         <button
           type="button"
           onClick={openModal}
-          className="rounded-md bg-black px-4 py-2 text-sm font-medium text-white hover:bg-black/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75"
+          className="rounded-md bg-black px-4 py-2 text-sm font-medium text-white hover:bg-black/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75 duration-500"
         >
           Create Product
         </button>
@@ -122,25 +126,20 @@ export default function Create() {
                       )}
                     </div>
 
-                    <div className="mt-4 flex gap-1">
+                  
+                      <DeleteBtn className={
+                        "w-full px-6 py-3 mt-3 text-lg text-white transition-all duration-150 ease-linear rounded-lg shadow outline-none bg-black hover:bg-black hover:shadow-lg focus:outline-none disabled:opacity-65"
+                      }
+                      title={"Create"}
+                      />
                       <button
                         type="button"
                         id="buttonclose"
-                        className="w-full px-6 py-3 mt-3 text-lg text-white transition-all duration-150 ease-linear rounded-lg shadow outline-none bg-gray-500 hover:bg-gray-600 hover:shadow-lg focus:outline-none"
+                        className="w-full px-6 py-3 mt-3 text-lg text-white transition-all duration-150 ease-linear rounded-lg shadow outline-none bg-red-500 hover:bg-red-600 hover:shadow-lg focus:outline-none"
                         onClick={closeModal}
                       >
                         close
                       </button>
-                      <button
-                        id="button"
-                        type="submit"
-                        className="w-full px-6 py-3 mt-3 text-lg text-white transition-all duration-150 ease-linear rounded-lg shadow outline-none bg-gray-500 hover:bg-gray-600 hover:shadow-lg focus:outline-none"
-                        // onClick={closeModal}
-                        disabled={pending}
-                      >
-                        {pending == true ? "Creating..." : "Create"}
-                      </button>
-                    </div>
                   </form>
                 </Dialog.Panel>
               </Transition.Child>

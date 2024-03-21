@@ -1,4 +1,5 @@
-"use server";
+"use server"
+
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import ProductModel from "./product-model";
@@ -44,8 +45,22 @@ export const createProduct = async (prevState, formData) => {
   const data = result.data;
   try {
     await dbConnect();
-    const product = new ProductModel(data);
-    await product.save();
+    // const product = new ProductModel(data);
+    // await product.save();
+    const response = await fetch(
+      `${process.env.API_URL}/api/products`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to Add product");
+    }
     revalidatePath("/");
     return { message: `Created product ${data.productName}` };
   } catch (e) {
@@ -54,31 +69,43 @@ export const createProduct = async (prevState, formData) => {
 };
 
 export async function deleteProduct(formData) {
-
   const id = formData.get("_id");
   const productName = formData.get("productName");
   try {
-    await dbConnect();
-    await ProductModel.findOneAndDelete({ _id:id });
+    // await dbConnect();
+    // await ProductModel.findOneAndDelete({ _id: id });
+
+    const response = await fetch(
+      `${process.env.API_URL}/api/products?id=${id}`,
+      {
+        method: "DELETE",
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to DELETE product");
+    }
+
     revalidatePath("/");
     return { message: `Deleted product ${productName}` };
   } catch (e) {
     return { message: "Failed to delete product" };
   }
 }
-  
-export const updateProduct = async (prevState,formData) => {
+
+export const updateProduct = async (prevState, formData) => {
   const productName = formData.get("productName");
   const category = formData.get("category");
   const image = formData.get("image");
   const price = formData.get("price");
   const id = formData.get("id"); // Get the ID of the product to update
 
+  console.log(id);
   const result = productSchema.safeParse({
     productName,
     category,
     image,
-    price
+    price,
   });
 
   if (!result.success) {
@@ -88,26 +115,26 @@ export const updateProduct = async (prevState,formData) => {
   }
 
   const data = result.data;
-  console.log(data);
   try {
-    const response = await fetch(`${process.env.API_URL}/products?id=${id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
+    const response = await fetch(
+      `${process.env.API_URL}/api/products?id=${id}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      }
+    );
 
     if (!response.ok) {
       throw new Error("Failed to update product");
     }
 
-    revalidatePath("/")
+    revalidatePath("/");
     return { message: `updated product successfully` };
   } catch (error) {
     console.error(error);
-    return { message: "Failed to update product" };
+    return { message: error.toString() };
   }
 };
-
-  
