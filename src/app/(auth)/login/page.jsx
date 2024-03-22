@@ -7,15 +7,10 @@ import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
 const Login = () => {
-  const [Loading, setLoading] = useState(false)
+  const [Loading, setLoading] = useState(false);
   const router = useRouter();
   const { data: session, status: sessionStatus } = useSession();
 
-  useEffect(() => {
-    if (sessionStatus === "authenticated") {
-      router.replace("/");
-    }
-  }, [sessionStatus, router]);
   const {
     register,
     handleSubmit,
@@ -25,21 +20,25 @@ const Login = () => {
   const onSubmit = async (data) => {
     // Handle form submission
     const { email, password } = data;
-    setLoading(true)
+    setLoading(true);
     const res = await signIn("credentials", {
       redirect: false,
       email,
       password,
     });
-    if (res.status==200) {
-      setLoading(false)
-        toast.success("login successfully");
-    }
+    
+    setLoading(!true);
     if (res?.error) {
       toast.error("Invalid email or password");
-    } 
+    }
   };
 
+  useEffect(() => {
+    if (sessionStatus === "authenticated") {
+      toast.success("login successfully");
+      router.replace("/");
+    }
+  }, [sessionStatus, router]);
   return (
     <>
       {sessionStatus !== "authenticated" && (
@@ -53,10 +52,7 @@ const Login = () => {
               className="w-full flex flex-col gap-4"
             >
               <div className="flex items-start flex-col justify-start">
-                <label
-                  htmlFor="email"
-                  className="text-sm  text-gray-200 mr-2"
-                >
+                <label htmlFor="email" className="text-sm  text-gray-200 mr-2">
                   Email:
                 </label>
                 <input
@@ -104,11 +100,14 @@ const Login = () => {
                 )}
               </div>
 
-              
-
-              <button type="submit" className="btn btn-active  disabled:opacity-55"  disabled={Loading}>Login</button>
+              <button
+                type="submit"
+                className="btn btn-active  disabled:opacity-55"
+                disabled={Loading}
+              >
+                Login
+              </button>
             </form>
-
 
             <div className="mt-4 text-center">
               <span className="text-sm  text-gray-300">
