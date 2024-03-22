@@ -3,11 +3,13 @@ import dbConnect from "../../../lib/db-connect";
 import ProductModel from "../../../lib/product-model";
 import { NextResponse } from "next/server";
 
-export const GET = async () => {
+export const GET = async (request) => {
+  const searchParams = request.nextUrl.searchParams;
+  const id = searchParams.get("user_id");
   await dbConnect();
 
   try {
-    const products = await ProductModel.find({}).sort({
+    const products = await ProductModel.find({user_id:id}).sort({
       _id: -1,
     });
 
@@ -27,22 +29,22 @@ export const POST = async (request) => {
   const body = await request.json();
 
   await dbConnect();
-
   try {
-    // Update the product with the new data (assuming req.body contains the updated data)
+
     const product = await new ProductModel({
       productName: body.productName,
       image: body.image,
       price: body.price,
       category: body.category,
+      user_id: body.user_id,
     });
-
+    
     const createdProduct = await product.save();
 
     // Return the updated product
     return NextResponse.json(createdProduct, { status: 200 });
   } catch (error) {
-    return NextResponse.json({ error: error }, { status: 500 });
+    return NextResponse.json({ error:error.message }, { status: 500 });
   }
 };
 export const PUT = async (request) => {

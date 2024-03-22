@@ -5,9 +5,7 @@
 }
 
 /* Track */
-body.dark::-webkit-scrollbar-track {
-  background: #000000;
-}
+
 body::-webkit-scrollbar-track {
   background: #ffffff;
 }
@@ -25,5 +23,8 @@ body {
 @layer utilities {
   .inputField {
     @apply px-5 py-1 mb-4 border-b-2 border-gray-300 ring-0 focus:ring-0 focus:outline-none;
+  }
+  .formInp {
+    @apply w-full px-3 text-gray-200 bg-gray-900 py-2 rounded-md border  border-gray-700 focus:outline-none focus:ring-1 focus:ring-blue-500
   }
 }

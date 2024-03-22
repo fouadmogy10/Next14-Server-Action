@@ -1,5 +1,6 @@
 "use client";
-import { updateProduct } from "../../lib/Actions";
+
+import { updateProduct } from "../lib/Actions";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useEffect, useState } from "react";
 import { useFormState } from "react-dom";
@@ -41,22 +42,24 @@ export default function EditProduct({ editProduct }) {
   useEffect(() => {
     if (state.message?.indexOf("updated product successfully") === 0) {
       toast.success(state.message);
+      closeModal();
     } else if (state.message) {
       toast.error(state.message);
     }
   }, [state.message]);
 
+  useEffect(() => {
+    if (state.errors ==undefined) {
+      closeModal();
+    }
+  }, [state]);
+
   return (
     <>
-      <div className="">
-        <button
-          type="button"
-          onClick={openModal}
-          className="w-full rounded-md bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75 duration-500"
-        >
-          Edit Product
-        </button>
-      </div>
+      <button type="button" onClick={openModal} className="btn btn-success">
+        {" "}
+        Update
+      </button>
 
       <Transition appear show={isOpen} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={closeModal}>
@@ -83,10 +86,10 @@ export default function EditProduct({ editProduct }) {
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-base-100 p-6 text-left align-middle shadow-xl transition-all">
                   <Dialog.Title
                     as="h3"
-                    className="text-lg font-medium leading-6 text-gray-900"
+                    className="text-lg font-medium leading-6 "
                   >
                     Edit {editProduct?.productName}
                   </Dialog.Title>
@@ -94,7 +97,7 @@ export default function EditProduct({ editProduct }) {
                     id="form"
                     action={async (formdata) => {
                       await formAction(formdata);
-                      closeModal();
+                     
                     }}
                   >
                     <div className="w-full mb-5">
@@ -110,9 +113,10 @@ export default function EditProduct({ editProduct }) {
                       <input
                         type="text"
                         name="productName"
+                        placeholder="productName"
                         value={formData.productName}
                         onChange={handleChange}
-                        className="pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-black border-gray-200"
+                        className="pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-black border-gray-200 placeholder:text-gray-600"
                       />
                       {state.errors?.productName && (
                         <p className="text-red-500">
@@ -124,9 +128,10 @@ export default function EditProduct({ editProduct }) {
                       <input
                         type="text"
                         name="category"
+                        placeholder="category"
                         value={formData.category}
                         onChange={handleChange}
-                        className="pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-black border-gray-200"
+                        className="pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-black border-gray-200 placeholder:text-gray-600"
                       />
                       {state.errors?.category && (
                         <p className="text-red-500">{state.errors.category}</p>
@@ -136,9 +141,10 @@ export default function EditProduct({ editProduct }) {
                       <input
                         type="text"
                         name="image"
+                        placeholder="image"
                         value={formData.image}
                         onChange={handleChange}
-                        className="pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-black border-gray-200"
+                        className="pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-black border-gray-200 placeholder:text-gray-600"
                       />
                       {state.errors?.image && (
                         <p className="text-red-500">{state.errors.image}</p>
@@ -148,28 +154,32 @@ export default function EditProduct({ editProduct }) {
                       <input
                         type="number"
                         name="price"
+                        placeholder="price"
                         value={formData.price}
                         onChange={handleChange}
-                        className="pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-black border-gray-200"
+                        className="pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-black border-gray-200 placeholder:text-gray-600"
                       />
                       {state.errors?.price && (
                         <p className="text-red-500">{state.errors.price}</p>
                       )}
                     </div>
 
-                    <div className="mt-4 flex gap-1">
+                    <div
+                      className="mt-4 flex flex-col-reverse
+                     gap-1"
+                    >
                       <button
                         type="button"
                         id="buttonclose"
-                        className="w-full px-6 py-3 mt-3 text-lg text-white transition-all duration-150 ease-linear rounded-lg shadow outline-none bg-gray-500 hover:bg-gray-600 hover:shadow-lg focus:outline-none"
                         onClick={closeModal}
+                        className="btn btn-outline"
                       >
                         close
                       </button>
 
                       <DeleteBtn
                         className={
-                          "w-full px-6 py-3 mt-3 text-lg text-white transition-all duration-150 ease-linear rounded-lg shadow outline-none bg-green-500 hover:bg-green-600 hover:shadow-lg focus:outline-none disabled:opacity-65"
+                          "w-full px-6 py-3 mt-3 text-lg text-base-100 transition-all duration-150 ease-linear rounded-lg shadow outline-none bg-green-500 hover:bg-green-600 hover:shadow-lg focus:outline-none disabled:opacity-65"
                         }
                         title={"Edit"}
                       />

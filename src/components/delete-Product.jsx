@@ -1,5 +1,5 @@
 "use client";
-import { deleteProduct } from "../../lib/Actions";
+import { deleteProduct } from "../lib/Actions";
 import toast from "react-hot-toast";
 import DeleteBtn from "./ui/DeleteBtn";
 

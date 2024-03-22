@@ -1,14 +1,15 @@
 "use client";
-import { createProduct } from "../../lib/Actions";
+import { createProduct } from "../lib/Actions";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useEffect, useRef, useState } from "react";
 import { useFormState } from "react-dom";
 import toast from "react-hot-toast";
 import DeleteBtn from "./ui/DeleteBtn";
+import { useSession } from "next-auth/react";
 
 export default function Create() {
   let [isOpen, setIsOpen] = useState(false);
-
+  const { data: session } = useSession();
   function closeModal() {
     setIsOpen(false);
   }
@@ -20,7 +21,6 @@ export default function Create() {
   const [state, formAction] = useFormState(createProduct, {
     message: null,
   });
-
 
   const ref = useRef(null);
 
@@ -36,15 +36,11 @@ export default function Create() {
 
   return (
     <>
-      <div className="">
-        <button
-          type="button"
-          onClick={openModal}
-          className="rounded-md bg-black px-4 py-2 text-sm font-medium text-white hover:bg-black/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75 duration-500"
-        >
+        {/* <button className="rounded-md bg-black px-4 py-2 text-sm  text-white hover:bg-black/30 focus-visible:ring-2 focus-visible:ring-white/75 duration-500 "></button> */}
+        <button type="button" onClick={openModal} className="btn btn-active">
+          {" "}
           Create Product
         </button>
-      </div>
 
       <Transition appear show={isOpen} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={closeModal}>
@@ -80,6 +76,13 @@ export default function Create() {
                   </Dialog.Title>
                   <form id="form" action={formAction} ref={ref}>
                     <div className=" w-full mb-5">
+                      <input
+                        type="text"
+                        hidden
+                        readOnly
+                        value={session.user._id}
+                        name="user_id"
+                      />
                       <input
                         type="text"
                         name="productName"
@@ -126,20 +129,20 @@ export default function Create() {
                       )}
                     </div>
 
-                  
-                      <DeleteBtn className={
+                    <DeleteBtn
+                      className={
                         "w-full px-6 py-3 mt-3 text-lg text-white transition-all duration-150 ease-linear rounded-lg shadow outline-none bg-black hover:bg-black hover:shadow-lg focus:outline-none disabled:opacity-65"
                       }
                       title={"Create"}
-                      />
-                      <button
-                        type="button"
-                        id="buttonclose"
-                        className="w-full px-6 py-3 mt-3 text-lg text-white transition-all duration-150 ease-linear rounded-lg shadow outline-none bg-red-500 hover:bg-red-600 hover:shadow-lg focus:outline-none"
-                        onClick={closeModal}
-                      >
-                        close
-                      </button>
+                    />
+                    <button
+                      type="button"
+                      id="buttonclose"
+                      className="w-full px-6 py-3 mt-3 text-lg text-white transition-all duration-150 ease-linear rounded-lg shadow outline-none bg-red-500 hover:bg-red-600 hover:shadow-lg focus:outline-none"
+                      onClick={closeModal}
+                    >
+                      close
+                    </button>
                   </form>
                 </Dialog.Panel>
               </Transition.Child>

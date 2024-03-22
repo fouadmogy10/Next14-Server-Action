@@ -1,9 +1,9 @@
-"use server"
+"use server";
 
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import ProductModel from "./product-model";
 import dbConnect from "./db-connect";
+
 const productSchema = z.object({
   productName: z
     .string({ required_error: "productName is required" })
@@ -28,7 +28,7 @@ export const createProduct = async (prevState, formData) => {
   const category = formData.get("category");
   const image = formData.get("image");
   const price = formData.get("price");
-
+  const user_id = formData.get("user_id");
   const result = productSchema.safeParse({
     productName,
     category,
@@ -43,20 +43,19 @@ export const createProduct = async (prevState, formData) => {
   }
 
   const data = result.data;
+
   try {
     await dbConnect();
     // const product = new ProductModel(data);
     // await product.save();
-    const response = await fetch(
-      `${process.env.API_URL}/api/products`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      }
-    );
+
+    const response = await fetch(`${process.env.API_URL}/api/products`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ ...data, user_id: user_id }),
+    });
 
     if (!response.ok) {
       throw new Error("Failed to Add product");
@@ -100,7 +99,6 @@ export const updateProduct = async (prevState, formData) => {
   const price = formData.get("price");
   const id = formData.get("id"); // Get the ID of the product to update
 
-  console.log(id);
   const result = productSchema.safeParse({
     productName,
     category,

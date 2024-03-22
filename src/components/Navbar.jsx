@@ -1,16 +1,49 @@
-import Create from "../app/_components/create_product";
+"use client";
+import Create from "./create_product";
 import React from "react";
-
+import { signOut, useSession } from "next-auth/react";
+import Link from "next/link";
 const Navbar = () => {
+  const { data: session } = useSession();
   return (
-    <nav className="container py-2">
-      <div className="flex sm:justify-between justify-center items-center sm:flex-nowrap flex-wrap gap-1">
-        <p className=" text-center font-bold sm:text-2xl text-[16px] ">
-          Next.js 14 Server Actions MongoDB - CRUD
-        </p>
-        <Create />
+    <div className="navbar bg-base-300">
+      <div className="container">
+        <div className="flex-1">
+          <a className="btn btn-ghost text-xl">CRUD</a>
+        </div>
+        <div className="flex-none">
+          <ul className="menu menu-horizontal px-1">
+            <li>
+              {session?.user ? (
+                <details className=" text-center">
+                  <summary>
+                    {session?.user.firstName} {session?.user.lastName}
+                  </summary>
+
+                  <ul className="p-2 bg-black/60 rounded-t-none  ">
+                    <li>
+                      {" "}
+                      <Create />
+                    </li>
+                    <li>
+                      <button
+                        onClick={() => signOut()}
+                        className="btn btn-error mt-2"
+                      >
+                        SignOut
+                      </button>
+                     
+                    </li>
+                  </ul>
+                </details>
+              ) : (
+                <Link href={"/login"}></Link>
+              )}
+            </li>
+          </ul>
+        </div>
       </div>
-    </nav>
+    </div>
   );
 };
 
