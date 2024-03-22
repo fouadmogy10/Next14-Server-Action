@@ -31,14 +31,12 @@ const Login = () => {
       email,
       password,
     });
-    if (res.ok) {
+    if (res.status==200) {
       setLoading(false)
-        
         toast.success("login successfully");
     }
     if (res?.error) {
       toast.error("Invalid email or password");
-    //   if (res?.url) router.replace("/");
     } 
   };
 
