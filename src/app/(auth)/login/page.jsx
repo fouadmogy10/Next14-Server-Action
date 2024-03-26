@@ -25,15 +25,16 @@ const Login = () => {
       redirect: false,
       email,
       password,
-    });
+    }).then(res => {
+      if (res?.error === null) {
+        toast.success("Login success");
+        router.push("/");
+      } else {
+        toast.error(res?.error);
+      }})
 
     setLoading(false);
-    if (result?.error) {
-    toast.error(result?.error);
-    } else {
-    toast.success("Login success");
-    router.push("/");
-    }
+
   };
   return (
     <>

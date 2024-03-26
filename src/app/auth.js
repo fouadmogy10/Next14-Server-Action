@@ -27,6 +27,7 @@ export const authConfig = {
               return user;
             }
           }
+          return null;
         } catch (err) {
           throw new Error(err);
         }
