@@ -26,12 +26,14 @@ const Login = () => {
       email,
       password,
     });
+
+    setLoading(!true);
+    console.log(res);
     if (res.url) {
       toast.success("login successfully");
 
       router.replace("/"); // Redirect to the home page
     }
-    setLoading(!true);
     if (res?.error) {
       toast.error("Invalid email or password");
     }
