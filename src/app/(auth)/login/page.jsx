@@ -26,19 +26,25 @@ const Login = () => {
       email,
       password,
     });
-    
+    if (res.ok) {
+      toast.success("login successfully");
+
+      router.replace("/"); // Redirect to the home page
+    } else {
+      // Handle unsuccessful login
+      toast.error("Login failed");
+    }
     setLoading(!true);
     if (res?.error) {
       toast.error("Invalid email or password");
     }
   };
 
-  useEffect(() => {
-    if (sessionStatus === "authenticated") {
-      toast.success("login successfully");
-      router.replace("/");
-    }
-  }, [sessionStatus, router]);
+  // useEffect(() => {
+  //   if (sessionStatus === "authenticated") {
+  //     router.replace("/");
+  //   }
+  // }, [sessionStatus]);
   return (
     <>
       {sessionStatus !== "authenticated" && (
