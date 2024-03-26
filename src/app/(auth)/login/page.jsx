@@ -2,7 +2,7 @@
 import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import {  useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
@@ -21,21 +21,18 @@ const Login = () => {
     // Handle form submission
     const { email, password } = data;
     setLoading(true);
-    const res = await signIn("credentials", {
+    const result = await signIn("credentials", {
       redirect: false,
       email,
       password,
     });
 
-    setLoading(!true);
-    console.log(res);
-    if (res.url) {
-      toast.success("login successfully");
-
-      router.replace("/"); // Redirect to the home page
-    }
-    if (res?.error) {
-      toast.error("Invalid email or password");
+    setLoading(false);
+    if (result?.error) {
+    toast.error(result?.error);
+    } else {
+    toast.success("Login success");
+    router.push("/");
     }
   };
   return (
