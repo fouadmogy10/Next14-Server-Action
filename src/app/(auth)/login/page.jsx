@@ -26,6 +26,7 @@ const Login = () => {
       email,
       password,
     }).then((res) => {
+      console.log(res);
       if (res?.error === "CredentialsSignin") {
         toast.error("Invalid credentials!");
       } else {
