@@ -25,16 +25,15 @@ const Login = () => {
       redirect: false,
       email,
       password,
-    }).then(res => {
-      if (res?.error === null) {
+    }).then((res) => {
+      if (res?.error === "CredentialsSignin") {
+        toast.error("Invalid credentials!");
+      } else {
         toast.success("Login success");
         router.push("/");
-      } else {
-        toast.error(res?.error);
-      }})
-
+      }
+    });
     setLoading(false);
-
   };
   return (
     <>
